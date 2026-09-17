@@ -3,7 +3,7 @@
 Official landing page for **SignKit** — the premier document signing, PDF annotation, and e-signature application.
 
 ## Live Website
-Visit the live site: [https://codzinc-offical.github.io/sign-kit/](https://codzinc-offical.github.io/sign-kit/)
+Visit the live site: [https://codzinc-offical.github.io/sign-kit/](https://codzinc-offical.github.io/signkit-web/)
 
 ## Features
 - **Sign PDF Documents**: Import, annotate, and place digital signatures seamlessly.
