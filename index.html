@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignKit — Sign PDFs on your phone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./landing_page_assets/app_logo.png">
+    <link rel="apple-touch-icon" href="./landing_page_assets/app_logo.png">
+    <style>
+        :root {
+            --primary: #2D3E40;
+            --primary-soft: #44585a;
+            --accent: #D97B66;
+            --accent-dark: #c1614c;
+            --bg: #FFFFFF;
+            --surface-container: #F7F7F7;
+            --border: #E5E7EB;
+            --on-surface: #191C1D;
+            --on-surface-variant: #6B7280;
+            --radius-lg: 28px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            color: var(--on-surface);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-weight: 700;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* SCROLL REVEAL (SUBTLE & HIGH-PERFORMANCE) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .reveal-delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
+
+        .wrap {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        /* NAV */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+        }
+
+        .brand-mark {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .brand-mark img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            font-size: 0.95rem;
+            color: var(--primary-soft);
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 26px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: transform .15s ease, box-shadow .15s ease;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 8px 20px -8px rgba(217, 123, 102, 0.6);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -8px rgba(217, 123, 102, 0.7);
+        }
+
+        .btn-ghost {
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+
+        .btn-ghost:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-disabled {
+            background: var(--surface-container);
+            color: var(--on-surface-variant);
+            cursor: not-allowed;
+            pointer-events: none;
+            border: 1px solid var(--border);
+        }
+
+        /* HERO */
+        header.hero {
+            background: linear-gradient(180deg, #fdf3f0 0%, #fff 85%);
+            padding: 42px 0 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .eyebrow-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 7px 14px;
+            border-radius: 100px;
+            font-size: 0.82rem;
+            color: var(--primary-soft);
+            margin-bottom: 22px;
+            font-weight: 600;
+        }
+
+        .eyebrow-tag span.dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        h1.headline {
+            font-size: 3.3rem;
+            line-height: 1.08;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+            max-width: 560px;
+        }
+
+        h1.headline em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--primary-soft);
+            margin: 24px 0 34px;
+            max-width: 480px;
+            font-weight: 500;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 34px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 36px;
+        }
+
+        .hero-stat b {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .hero-stat span {
+            font-size: 0.85rem;
+            color: var(--on-surface-variant);
+            font-weight: 500;
+        }
+
+        /* HERO SHOWCASE */
+        .phone-stage {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .phone-mockup {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 320px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 16px 36px -14px rgba(45, 62, 64, 0.18), 0 4px 12px -4px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(229, 231, 235, 0.9);
+            background: #fff;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .phone-mockup:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 46px -14px rgba(45, 62, 64, 0.22), 0 6px 14px -4px rgba(0, 0, 0, 0.08);
+        }
+
+        .phone-mockup img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .blob {
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(217, 123, 102, 0.14), transparent 70%);
+            top: -80px;
+            right: -120px;
+            z-index: 1;
+        }
+
+        /* TRUST STRIP */
+        .trust {
+            padding: 22px 0;
+            background: #fafbfb;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trust .wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.92rem;
+            color: var(--on-surface-variant);
+            font-weight: 500;
+        }
+
+        .trust-item b {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .trust-item .trust-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(45, 62, 64, 0.08);
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* FEATURES */
+        .features {
+            padding: 120px 0 60px;
+        }
+
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 70px;
+            align-items: center;
+            margin-bottom: 130px;
+        }
+
+        .feature-row.reverse .copy {
+            order: 2;
+        }
+
+        .feature-row.reverse .visual {
+            order: 1;
+        }
+
+        .feature-index {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .feature-row h2 {
+            font-size: 2.05rem;
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            max-width: 420px;
+            color: var(--primary);
+        }
+
+        .feature-row p {
+            color: var(--primary-soft);
+            font-size: 1.03rem;
+            line-height: 1.65;
+            max-width: 420px;
+            margin-bottom: 22px;
+            font-weight: 500;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-list li {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 0.95rem;
+            color: var(--primary-soft);
+            list-style: none;
+            font-weight: 500;
+        }
+
+        .feature-list svg {
+            flex-shrink: 0;
+            margin-top: 3px;
+            width: 16px;
+            height: 16px;
+            color: var(--accent);
+        }
+
+        .visual {
+            display: flex;
+            justify-content: center;
+        }
+
+        .shot-frame {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 16px 36px -14px rgba(45, 62, 64, 0.18), 0 4px 12px -4px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        .shot-frame img {
+            width: 100%;
+            display: block;
+        }
+
+        /* PLANS */
+        .plans {
+            padding: 80px 0 100px;
+            background: var(--surface-container);
+            border-radius: 40px;
+            margin: 0 24px 100px;
+        }
+
+        .plans-head {
+            text-align: center;
+            max-width: 560px;
+            margin: 0 auto 56px;
+        }
+
+        .plans-head h2 {
+            font-size: 2.2rem;
+            margin-bottom: 14px;
+            color: var(--primary);
+        }
+
+        .plans-head p {
+            color: var(--on-surface-variant);
+            font-size: 1.03rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .plan-card {
+            background: #fff;
+            border-radius: 22px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .plan-card.highlight {
+            border: 2px solid var(--accent);
+            background: #fff;
+            box-shadow: 0 12px 30px -10px rgba(217, 123, 102, 0.18);
+        }
+
+        .plan-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .plan-tier {
+            font-weight: 700;
+            font-size: 1.35rem;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .plan-card.highlight .plan-tier {
+            color: var(--accent);
+        }
+
+        .plan-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #fff;
+            background: var(--accent);
+            padding: 3px 9px;
+            border-radius: 100px;
+            line-height: 1.2;
+        }
+
+        .plan-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 18px 0 24px;
+        }
+
+        .plan-card li {
+            display: flex;
+            gap: 10px;
+            font-size: 0.93rem;
+            align-items: flex-start;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .plan-card li svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            color: var(--primary-soft);
+        }
+
+        .plan-card.highlight li svg {
+            color: var(--accent);
+        }
+
+        .plan-price-box {
+            margin-top: auto;
+            padding-top: 18px;
+            border-top: 1px dashed var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-container);
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+        }
+
+        .price-row.recommended {
+            border: 1.5px solid var(--accent);
+            background: rgba(217, 123, 102, 0.05);
+        }
+
+        .price-info b {
+            font-size: 0.95rem;
+            color: var(--primary);
+            display: block;
+        }
+
+        .price-info span {
+            font-size: 0.78rem;
+            color: var(--on-surface-variant);
+            font-weight: 500;
+        }
+
+        .price-tag {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .price-row.recommended .price-tag {
+            color: var(--accent);
+        }
+
+        .free-price-box {
+            margin-top: auto;
+            padding: 16px;
+            border-radius: 14px;
+            background: var(--surface-container);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .free-price-box b {
+            font-size: 1.5rem;
+            color: var(--primary);
+            display: block;
+        }
+
+        .free-price-box span {
+            font-size: 0.82rem;
+            color: var(--on-surface-variant);
+            font-weight: 500;
+        }
+
+        /* FOOTER CTA */
+        .final-cta {
+            padding: 40px 0 80px;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 2.3rem;
+            max-width: 600px;
+            margin: 0 auto 18px;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+        }
+
+        .final-cta p {
+            color: var(--primary-soft);
+            margin-bottom: 0;
+            font-size: 1.03rem;
+            font-weight: 500;
+        }
+
+        /* DISTINCT ELEGANT FOOTER */
+        footer {
+            background: #f1f4f4;
+            border-top: 1px solid #dbe2e3;
+            padding: 42px 0 46px;
+        }
+
+        footer .wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-brand {
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-brand span {
+            color: var(--on-surface-variant);
+            font-weight: 500;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.9rem;
+            color: var(--primary-soft);
+            font-weight: 600;
+        }
+
+        .footer-links a {
+            transition: color 0.15s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-links a.privacy-link {
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 12px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+        }
+
+        .footer-links a.privacy-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(25, 28, 29, 0.55);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 24px;
+            padding: 36px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.35);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--surface-container);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .modal-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+
+        .modal-box h3 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .modal-box p.desc {
+            color: var(--on-surface-variant);
+            font-size: 0.94rem;
+            line-height: 1.55;
+            margin-bottom: 22px;
+            font-weight: 500;
+        }
+
+        .modal-form input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1.5px solid var(--border);
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            color: var(--on-surface);
+            outline: none;
+            transition: border-color .15s ease;
+        }
+
+        .modal-form input:focus {
+            border-color: var(--accent);
+        }
+
+        .modal-form .btn {
+            width: 100%;
+        }
+
+        .modal-error {
+            color: #c1614c;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin: -4px 0 12px;
+            display: none;
+        }
+
+        .modal-error.show {
+            display: block;
+        }
+
+        .modal-success {
+            display: none;
+            text-align: center;
+        }
+
+        .modal-success.show {
+            display: block;
+        }
+
+        .modal-success .check {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #e7f4ec;
+            color: #3a9b5c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .modal-success h3 {
+            margin-bottom: 8px;
+        }
+
+        .modal-success p {
+            color: var(--on-surface-variant);
+            font-size: 0.92rem;
+            font-weight: 500;
+        }
+
+        .modal-form.hide {
+            display: none;
+        }
+
+        @media (max-width:860px) {
+            h1.headline {
+                font-size: 2.4rem;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .phone-stage {
+                margin-top: 20px;
+            }
+
+            .feature-row,
+            .feature-row.reverse {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+
+            .feature-row.reverse .copy {
+                order: 1;
+            }
+
+            .feature-row.reverse .visual {
+                order: 2;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .plans {
+                margin: 0 14px 70px;
+                padding: 60px 22px;
+                border-radius: 28px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .trust .wrap {
+                flex-direction: column;
+            }
+
+            .features {
+                padding: 80px 0 40px;
+            }
+
+            .feature-row {
+                margin-bottom: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="wrap">
+            <div class="brand"><span class="brand-mark"><img src="./landing_page_assets/app_logo.png"
+                        alt="SignKit"></span>SignKit</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#plans">Pricing</a>
+            </div>
+            <button class="btn btn-primary" onclick="openModal()">Get SignKit</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="blob"></div>
+        <div class="wrap hero-grid">
+            <div>
+                <div class="eyebrow-tag"><span class="dot"></span>Closed Beta &bull; Google Play</div>
+                <h1 class="headline">Sign a PDF without leaving a <em>watermark</em> behind.</h1>
+                <p class="hero-sub">Draw your signature, drop in a stamp, and export a clean document — all from your
+                    phone, all in one tap. No account, no uploads, no waiting.</p>
+                <div class="hero-ctas">
+                    <button class="btn btn-primary" onclick="openModal()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M3.609 1.814L13.793 12 3.61 22.186a2.07 2.07 0 0 1-.61-.954V2.768c0-.36.22-.68.61-.954zm11.242 11.244L17.73 10.18l-9.84-5.68 6.96 8.558zm0 1.884l-6.96 8.558 9.84-5.68-2.88-2.878zm2.083-1.127l3.66 2.112c.866.5.866 1.317 0 1.817l-3.66 2.112-2.14-2.14 2.14-1.9z" />
+                        </svg>
+                        Get on Google Play
+                    </button>
+                    <a href="#features" class="btn btn-ghost">See features</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat"><b>2</b><span>free documents / month</span></div>
+                    <div class="hero-stat"><b>4</b><span>signature slots</span></div>
+                    <div class="hero-stat"><b>0</b><span>watermarks, ever</span></div>
+                </div>
+            </div>
+            <div class="phone-stage">
+                <div class="phone-mockup">
+                    <img src="./landing_page_assets/sign pdf.png" alt="Sign PDF without watermark">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="trust reveal">
+        <div class="wrap">
+            <div class="trust-item">
+                <span class="trust-icon">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                </span>
+                <span><b>Offline-first</b> — your PDFs never leave the device</span>
+            </div>
+            <div class="trust-item">
+                <span class="trust-icon">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                </span>
+                <span><b>No forced subscription</b> — 2 documents free every month</span>
+            </div>
+            <div class="trust-item">
+                <span class="trust-icon">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 8v4l3 3" />
+                    </svg>
+                </span>
+                <span><b>Built by Codzinc</b> — independent mobile app studio</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="wrap">
+
+            <div class="feature-row reveal">
+                <div class="copy">
+                    <div class="feature-index">Signing</div>
+                    <h2>Draw it once. Reuse it on every document.</h2>
+                    <p>Sign with your finger, save it, and it's ready the next time a document needs your name — no
+                        redrawing, no re-uploading.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Five ink colors and adjustable stroke width</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Keep separate signatures for tax, bank, or agreement papers</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Placed and resized directly on the page</li>
+                    </ul>
+                </div>
+                <div class="visual">
+                    <div class="shot-frame"><img src="./landing_page_assets/eSignature.png"
+                            alt="Create your signature screen"></div>
+                </div>
+            </div>
+
+            <div class="feature-row reverse reveal">
+                <div class="copy">
+                    <div class="feature-index">Stamps</div>
+                    <h2>Mark a document's status at a glance.</h2>
+                    <p>Drop in a Paid, Approved, Draft, or Confidential stamp the same way you'd reach for an ink stamp
+                        on paper.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>A growing library of ready-made stamps</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Add your own label and color</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Rotates and sizes like a real stamp</li>
+                    </ul>
+                </div>
+                <div class="visual">
+                    <div class="shot-frame"><img src="./landing_page_assets/stamp library.png"
+                            alt="Stamp library screen">
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-row reveal">
+                <div class="copy">
+                    <div class="feature-index">Management</div>
+                    <h2>Find, organize, and access PDFs in one place.</h2>
+                    <p>Quick search, clean organization, and effortless sharing — keep all your signed documents safe
+                        right on your device.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Instant document search and preview</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Quick share and export without watermarks</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Clean, modern offline storage</li>
+                    </ul>
+                </div>
+                <div class="visual">
+                    <div class="shot-frame"><img src="./landing_page_assets/manage documents.png"
+                            alt="Manage documents screen"></div>
+                </div>
+            </div>
+
+            <div class="feature-row reverse reveal">
+                <div class="copy">
+                    <div class="feature-index">Organizing</div>
+                    <h2>Keep every signature ready, not just one.</h2>
+                    <p>A tax signature, a bank signature, one for agreements — save as many as you need and pick the
+                        right one each time.</p>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Name and label each saved signature</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Switch between them in one tap</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>Search, organize, and share documents from one place</li>
+                    </ul>
+                </div>
+                <div class="visual">
+                    <div class="shot-frame"><img src="./landing_page_assets/my signatures.png"
+                            alt="Multiple saved signatures screen"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="plans" id="plans">
+        <div class="wrap">
+            <div class="plans-head reveal">
+                <h2>Free to start</h2>
+                <p>Two documents a month, no card and no account required.</p>
+            </div>
+            <div class="plans-grid">
+                <!-- FREE TIER -->
+                <div class="plan-card reveal reveal-delay-1">
+                    <div class="plan-tier">Free</div>
+                    <ul>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            2 PDF documents / month
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            4 built-in + 1 custom stamp
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            Draw 2 + upload 1 signature
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            Shows ads
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            No watermark
+                        </li>
+                    </ul>
+                    <div class="free-price-box">
+                        <b>$0</b>
+                        <span>Free forever &bull; No card required</span>
+                    </div>
+                </div>
+
+                <!-- PRO TIER -->
+                <div class="plan-card highlight reveal reveal-delay-2">
+                    <div class="plan-header">
+                        <div class="plan-tier">Pro</div>
+                        <span class="plan-badge">Most Popular</span>
+                    </div>
+                    <ul>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            Unlimited PDF documents
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            Unlimited custom stamps
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            Unlimited saved signatures
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            100% ad-free
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor">
+                                <path d="M20 6L9 17l-5-5" />
+                            </svg>
+                            No watermark
+                        </li>
+                    </ul>
+                    <div class="plan-price-box">
+                        <div class="price-row recommended">
+                            <div class="price-info">
+                                <b>Yearly (Best value)</b>
+                                <span>$2.50 / month &bull; 7-Day Free Trial</span>
+                            </div>
+                            <div class="price-tag">$29.99</div>
+                        </div>
+                        <div class="price-row">
+                            <div class="price-info">
+                                <b>Monthly</b>
+                                <span>Billed each month</span>
+                            </div>
+                            <div class="price-tag">$4.99</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta reveal">
+        <div class="wrap">
+            <h2>Your next document is one signature away.</h2>
+            <p>Request early access — invites go out from Codzinc directly.</p>
+        </div>
+    </section>
+
+    <footer id="footer">
+        <div class="wrap">
+            <div class="footer-brand">
+                <strong>SignKit</strong>
+                <span>by Codzinc &bull; codzinc.support.team@gmail.com</span>
+            </div>
+            <div class="footer-links">
+                <a href="https://codzinc-offical.github.io/sign-kit/" class="privacy-link" target="_blank"
+                    rel="noopener noreferrer" title="Read our Privacy Policy">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    Privacy Policy
+                </a>
+                <a href="https://codzinc-offical.github.io" target="_blank">Codzinc</a>
+                <a href="https://instagram.com/codzinc.apps" target="_blank">Instagram</a>
+                <a href="https://github.com/codzinc-offical" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1D" stroke-width="2.5">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div id="formState">
+                <div class="modal-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+                        <path d="M4 4h16v16H4z" />
+                        <path d="M22 6l-10 7L2 6" />
+                    </svg>
+                </div>
+                <h3>Join Closed Testing</h3>
+                <p class="desc">SignKit is currently in closed testing on Google Play. Leave your Google Play email and
+                    we will grant your access within 24-48 hours!</p>
+                <form class="modal-form" id="emailForm" onsubmit="submitEmail(event)">
+                    <input type="email" id="emailInput" placeholder="your.googleplay@email.com" required>
+                    <div class="modal-error" id="modalError">Enter a valid email address.</div>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Get Play Store Access</button>
+                </form>
+            </div>
+
+            <div class="modal-success" id="successState">
+                <div class="check">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                </div>
+                <h3>You're on the list!</h3>
+                <p id="successMsg">You'll receive your Google Play closed test invitation link shortly.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---------------------------------------------------------------------------
+        const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzLX95xtwdrabzcg8Y-JVbxG1cML2iWLrF11uoYM0tQfTYedpY78-4D8Bk90UbXbx9i/exec";
+
+        function openModal() {
+            document.getElementById('modalOverlay').classList.add('open');
+            document.getElementById('formState').style.display = 'block';
+            document.getElementById('successState').classList.remove('show');
+            document.getElementById('modalError').classList.remove('show');
+        }
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+        }
+        document.getElementById('modalOverlay').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        function isValidEmail(v) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+        }
+
+        async function submitEmail(e) {
+            e.preventDefault();
+            const input = document.getElementById('emailInput');
+            const email = input.value.trim();
+            const errorEl = document.getElementById('modalError');
+            const btn = document.getElementById('submitBtn');
+
+            if (!isValidEmail(email)) {
+                errorEl.textContent = 'Please enter a valid email address.';
+                errorEl.classList.add('show');
+                return;
+            }
+            errorEl.classList.remove('show');
+            btn.disabled = true;
+            btn.textContent = 'Saving…';
+
+            try {
+                if (GOOGLE_SHEET_WEBAPP_URL && !GOOGLE_SHEET_WEBAPP_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+                    // Send to Google Sheets via Apps Script Web App
+                    const formData = new FormData();
+                    formData.append("email", email);
+                    formData.append("date", new Date().toLocaleString());
+
+                    await fetch(GOOGLE_SHEET_WEBAPP_URL, {
+                        method: "POST",
+                        body: formData,
+                        mode: "no-cors" // Essential for Google Apps Script redirects
+                    });
+                } else {
+                    // Local fallback storage for testing before you paste the script URL
+                    const existing = JSON.parse(localStorage.getItem('signkit_tester_emails') || '[]');
+                    existing.push({ email, timestamp: new Date().toISOString() });
+                    localStorage.setItem('signkit_tester_emails', JSON.stringify(existing));
+                }
+
+                input.value = '';
+                document.getElementById('formState').style.display = 'none';
+                document.getElementById('successState').classList.add('show');
+            } catch (err) {
+                console.error("Submission error:", err);
+                errorEl.textContent = 'Something went wrong. Please try again.';
+                errorEl.classList.add('show');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Get Play Store Access';
+            }
+        }
+
+        // --- SUBTLE SCROLL REVEAL OBSERVER ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealElements = document.querySelectorAll('.reveal');
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            obs.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.12,
+                    rootMargin: '0px 0px -40px 0px'
+                });
+
+                revealElements.forEach(el => observer.observe(el));
+            } else {
+                // Fallback for older browsers
+                revealElements.forEach(el => el.classList.add('visible'));
+            }
+        });
+    </script>
+
+</body>
+
+</html>
