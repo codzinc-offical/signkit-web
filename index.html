@@ -364,93 +364,75 @@
         }
 
         /* FEATURES */
-        .features {
-            padding: 120px 0 60px;
+        .what-it-does {
+            padding: 90px 0 80px;
         }
 
-        .feature-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 70px;
-            align-items: center;
-            margin-bottom: 130px;
+        .section-head {
+            text-align: center;
+            margin-bottom: 48px;
         }
 
-        .feature-row.reverse .copy {
-            order: 2;
-        }
-
-        .feature-row.reverse .visual {
-            order: 1;
-        }
-
-        .feature-index {
-            font-size: 0.85rem;
-            color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 14px;
-        }
-
-        .feature-row h2 {
-            font-size: 2.05rem;
-            line-height: 1.2;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
-            max-width: 420px;
+        .section-head h2 {
+            font-size: 2rem;
             color: var(--primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
         }
 
-        .feature-row p {
-            color: var(--primary-soft);
-            font-size: 1.03rem;
-            line-height: 1.65;
-            max-width: 420px;
-            margin-bottom: 22px;
+        .section-head p {
+            color: var(--on-surface-variant);
+            font-size: 1rem;
             font-weight: 500;
+            max-width: 460px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
 
-        .feature-list {
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--surface-container);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 32px 28px;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 12px 32px -8px rgba(45, 62, 64, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: #fff;
+            border: 1px solid var(--border);
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .feature-list li {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-            font-size: 0.95rem;
-            color: var(--primary-soft);
-            list-style: none;
-            font-weight: 500;
-        }
-
-        .feature-list svg {
-            flex-shrink: 0;
-            margin-top: 3px;
-            width: 16px;
-            height: 16px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
             color: var(--accent);
         }
 
-        .visual {
-            display: flex;
-            justify-content: center;
+        .feature-card h3 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
         }
 
-        .shot-frame {
-            width: 100%;
-            max-width: 320px;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 16px 36px -14px rgba(45, 62, 64, 0.18), 0 4px 12px -4px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border);
-        }
-
-        .shot-frame img {
-            width: 100%;
-            display: block;
+        .feature-card p {
+            font-size: 0.91rem;
+            color: var(--on-surface-variant);
+            line-height: 1.65;
+            font-weight: 500;
         }
 
         /* PLANS */
@@ -896,12 +878,8 @@
                 flex-direction: column;
             }
 
-            .features {
-                padding: 80px 0 40px;
-            }
-
-            .feature-row {
-                margin-bottom: 80px;
+            .features-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -986,106 +964,55 @@
         </div>
     </section>
 
-    <section class="features" id="features">
+    <section class="what-it-does" id="features">
         <div class="wrap">
-
-            <div class="feature-row reveal">
-                <div class="copy">
-                    <div class="feature-index">Signing</div>
-                    <h2>Draw it once. Reuse it on every document.</h2>
-                    <p>Sign with your finger, save it, and it's ready the next time a document needs your name — no
-                        redrawing, no re-uploading.</p>
-                    <ul class="feature-list">
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Five ink colors and adjustable stroke width</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Keep separate signatures for tax, bank, or agreement papers</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Placed and resized directly on the page</li>
-                    </ul>
-                </div>
-                <div class="visual">
-                    <div class="shot-frame"><img src="./landing_page_assets/eSignature.jpg"
-                            alt="Create your signature screen" loading="lazy"></div>
-                </div>
+            <div class="section-head reveal">
+                <h2>Everything you need to sign a document.</h2>
+                <p>Three powerful tools in one lightweight app — no account, no uploads, no watermarks.</p>
             </div>
+            <div class="features-grid">
 
-            <div class="feature-row reverse reveal">
-                <div class="copy">
-                    <div class="feature-index">Stamps</div>
-                    <h2>Mark a document's status at a glance.</h2>
-                    <p>Drop in a Paid, Approved, Draft, or Confidential stamp the same way you'd reach for an ink stamp
-                        on paper.</p>
-                    <ul class="feature-list">
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>A growing library of ready-made stamps</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Add your own label and color</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Rotates and sizes like a real stamp</li>
-                    </ul>
-                </div>
-                <div class="visual">
-                    <div class="shot-frame"><img src="./landing_page_assets/stamp library.jpg"
-                            alt="Stamp library screen" loading="lazy">
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                        </svg>
                     </div>
+                    <h3>Draw &amp; Place Signatures</h3>
+                    <p>Finger-draw your signature directly on any PDF page. Save it once and reuse it across every
+                        document — no re-drawing, no re-uploading.</p>
                 </div>
-            </div>
 
-            <div class="feature-row reveal">
-                <div class="copy">
-                    <div class="feature-index">Management</div>
-                    <h2>Find, organize, and access PDFs in one place.</h2>
-                    <p>Quick search, clean organization, and effortless sharing — keep all your signed documents safe
-                        right on your device.</p>
-                    <ul class="feature-list">
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Instant document search and preview</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Quick share and export without watermarks</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Clean, modern offline storage</li>
-                    </ul>
+                <div class="feature-card reveal reveal-delay-1">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <path d="M3 9h18M9 21V9" />
+                        </svg>
+                    </div>
+                    <h3>Official Stamps &amp; Seals</h3>
+                    <p>Drop a Paid, Approved, Draft, or Confidential stamp anywhere on the page. Rotate and resize it —
+                        just like a real ink stamp.</p>
                 </div>
-                <div class="visual">
-                    <div class="shot-frame"><img src="./landing_page_assets/manage documents.jpg"
-                            alt="Manage documents screen" loading="lazy"></div>
-                </div>
-            </div>
 
-            <div class="feature-row reverse reveal">
-                <div class="copy">
-                    <div class="feature-index">Organizing</div>
-                    <h2>Keep every signature ready, not just one.</h2>
-                    <p>A tax signature, a bank signature, one for agreements — save as many as you need and pick the
-                        right one each time.</p>
-                    <ul class="feature-list">
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Name and label each saved signature</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Switch between them in one tap</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M20 6L9 17l-5-5" />
-                            </svg>Search, organize, and share documents from one place</li>
-                    </ul>
+                <div class="feature-card reveal reveal-delay-2">
+                    <div class="feature-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14,2 14,8 20,8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                    </div>
+                    <h3>Export Clean PDFs</h3>
+                    <p>Share your signed document instantly — zero watermarks, no quality loss. Your file stays exactly
+                        the way you signed it, ready to send.</p>
                 </div>
-                <div class="visual">
-                    <div class="shot-frame"><img src="./landing_page_assets/my signatures.jpg"
-                            alt="Multiple saved signatures screen" loading="lazy"></div>
-                </div>
-            </div>
 
+            </div>
         </div>
     </section>
 
